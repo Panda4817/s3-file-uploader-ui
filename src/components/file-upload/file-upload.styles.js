@@ -34,8 +34,8 @@ export const InputLabel = styled.label`
   top: -21px;
   font-size: 13px;
   color: black;
-  left: 0;
   position: absolute;
+  text-align: center;
 `;
 
 export const DragDropText = styled.p`

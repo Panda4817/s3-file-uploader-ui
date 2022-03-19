@@ -12,18 +12,24 @@ function App() {
     region: REGION,
     credentials: { accessKeyId: ACCESS_KEY, secretAccessKey: SECRET }
   });
-  const [mappingFiles, setMappingFiles] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [showUploadComplete, setShowUploadComplete] = useState(false);
 
-  const updateUploadedFiles = (files) =>
-    setMappingFiles(files);
+  const updateUploadedFiles = (files) => {
+    setFiles(files);
+    setShowUploadComplete(false);
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("submit working")
-    mappingFiles.map(async file => {
+    files.map(async file => {
       let output = await client.send(new UploadPartCommand({ Body: file.file, Bucket: BUCKET, Key: file.key }));
-      console.log(output.$metadata.httpStatusCode);
+      output.$metadata.httpStatusCode === 200 ? console.log("success") : console.log("failed");
     })
+    console.log("upload complete");
+    setFiles([]);
+    setShowUploadComplete(true);
+    setTimeout(() => setShowUploadComplete(false), 5000)
 
   };
 
@@ -32,11 +38,12 @@ function App() {
       <form onSubmit={handleSubmit}>
         <FileUpload
           accept=".csv"
-          label="Mapping files"
+          label="S3 File Uploader UI"
           multiple
           updateFilesCb={updateUploadedFiles}
         />
         <button type="submit" onClick={handleSubmit}>Upload to S3 bucket</button>
+        {showUploadComplete ? <h2>Upload complete</h2> : null}
       </form>
     </div>
   );

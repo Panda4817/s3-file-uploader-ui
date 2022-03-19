@@ -81,7 +81,7 @@ const FileUpload = ({
                 />
             </FileUploadContainer>
             <FilePreviewContainer>
-                <span>To Upload</span>
+                <span>To Upload:</span>
                 <PreviewList>
                     {Object.keys(files).map((fileName, index) => {
                         let file = files[fileName];
